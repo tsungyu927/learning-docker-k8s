@@ -1,0 +1,29 @@
+# Steps
+#   1. Specify Docker as a dependency
+#   2. Build test version of React project
+#   3. Run tests (on Dockerfile.dev)
+#   4. Build Prod versions of all projects
+#   5. Push all to Docker Hub
+#   6. Tell Elastic Beanstalk to update
+sudo: required
+services:
+  - docker
+
+before_install:
+  - docker build -t tsungyu927/react-client-test -f ./client/Dockerfile.dev ./client
+
+script:
+  - docker run tsungyu927/react-client-test npm test run
+
+after_success:
+  - docker build -t tsungyu927/fib-client ./client
+  - docker build -t tsungyu927/fib-nginx ./nginx
+  - docker build -t tsungyu927/fib-server ./server
+  - docker build -t tsungyu927/fib-worker ./worker
+  # Login to the Docker CLI
+  - echo "$DOCKER_PASSWORD" |  docker login -u "$DOCKER_ID" --password-stdin
+  # Take those image and push them to Docker Hub
+  - docker push tsungyu927/fib-client
+  - docker push tsungyu927/fib-nginx
+  - docker push tsungyu927/fib-server
+  - docker push tsungyu927/fib-worker

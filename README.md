@@ -8,8 +8,16 @@ This course is dedicated to learning docker and k8s. And build a **Fibonacci Cal
 
 ## Installation
 
-Follow below instruction to start the project
+Follow below instruction to start the project (in DEV)
+
+> Start
 
 ```bash
-docker compose up --build
+docker compose -f docker-compose-dev.yml up --build
+```
+
+> Stop
+
+```bash
+docker compose -f docker-compose-dev.yml down
 ```
